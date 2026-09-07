@@ -2,7 +2,7 @@
 
 **LightTrack** is a simple, Arduino-controlled LED response track for behavioural and psychophysics experiments.
 
-![LightTrack system overview](https://github.com/jakab13/LightTrack/system_overview.png)
+![LightTrack system overview](https://github.com/jakab13/LightTrack/blob/master/system_overview.png)
 
 The original prototype was developed for auditory distance-estimation experiments at Leipzig University's [Neurobiology Group](https://www.lw.uni-leipzig.de/en/institut-fuer-biologie/abteilungen/general-zoology-and-neurobiology/research). Participants moved a red marker along two floor-mounted LED strips with an Xbox controller and pressed A to confirm their response.
 
