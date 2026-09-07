@@ -14,19 +14,6 @@ The implementation is intentionally small:
 
 Python keeps track of the participant's current response, converts that distance to the nearest LED position, and sends the corresponding command to an Arduino. The Arduino only controls the LED strips.
 
-```text
-README.md
-lighttrack.py
-lighttrack.ino
-experiment_example.py
-requirements.txt
-LICENSE
-
-system_overview.png
-wiring.svg
-experiment_example.png
-```
-
 - `lighttrack.py` — Python interface to the response track
 - `lighttrack.ino` — Arduino firmware
 - `experiment_example.py` — small auditory distance-estimation example
