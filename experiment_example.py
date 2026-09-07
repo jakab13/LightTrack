@@ -22,7 +22,7 @@ import csv
 import random
 import time
 
-import pygame
+import pygame # used to connect to the xbox controller
 import slab
 
 from lighttrack import LightTrack
