@@ -186,9 +186,10 @@ stimulus.play()
 response_m = get_response(
     track,
     controller,
-    position_m,
+    position_meters,
 )
 ```
+where `target_m` and `response_m` are the distances of the target stimulus and the distance indicated by the participant in meters.
 
 ---
 
@@ -333,25 +334,6 @@ controller / keyboard / other input
 ```
 
 Python remains the central hub, so the input device and stimulus software can be replaced without changing the Arduino side.
-
----
-
-## Original prototype
-
-LightTrack grew out of an auditory distance-perception setup at Leipzig University.
-
-The original prototype used:
-
-- two floor-mounted addressable RGB LED strips;
-- 30 LEDs/m;
-- approximately 1–13 m of response space;
-- one active red marker on both strips;
-- green confirmation feedback;
-- an Xbox One-compatible controller;
-- an Arduino Nano 33 IoT;
-- Python as the central experiment and response interface.
-
-The strips extended beyond the loudspeaker range, which helped avoid making the response endpoints identical to the nearest and furthest possible sound-source positions. This response arrangement is described in the original experiment documentation.
 
 ---
 
