@@ -1,3 +1,4 @@
 pyserial>=3.5
 pygame>=2.5
+python-osc>=1.8
 slab[hrtf]>=1.8.2

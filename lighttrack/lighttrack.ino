@@ -13,6 +13,11 @@
 
   The Arduino does not work in metres. It only needs to know which LED
   should be active and what colour it should have.
+
+  Sending the colours to the strips takes much longer than reading a
+  command, so the strips are only updated once all waiting commands have
+  been read. That way the marker always shows the latest position and
+  never falls behind a fast-moving joystick.
 */
 
 #include <Adafruit_NeoPixel.h>
@@ -42,6 +47,16 @@ const int BRIGHTNESS = 64;
 int numLeds = 1;
 int previousLed = -1;
 
+// True when the LED colours changed but have not been sent to the strips yet.
+bool needsShow = false;
+
+// The command currently being received, up to the newline.
+// The longest valid command is "SET 65535 255 255 255".
+const int MAX_COMMAND_LENGTH = 32;
+char command[MAX_COMMAND_LENGTH + 1];
+int commandLength = 0;
+bool commandTooLong = false;
+
 Adafruit_NeoPixel leftStrip(1, LEFT_PIN, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel rightStrip(1, RIGHT_PIN, NEO_GRB + NEO_KHZ800);
 
@@ -52,10 +67,8 @@ void clearTrack() {
   leftStrip.clear();
   rightStrip.clear();
 
-  leftStrip.show();
-  rightStrip.show();
-
   previousLed = -1;
+  needsShow = true;
 }
 
 
@@ -90,10 +103,43 @@ void showLed(int index, int r, int g, int b) {
   leftStrip.setPixelColor(index, leftStrip.Color(r, g, b));
   rightStrip.setPixelColor(index, rightStrip.Color(r, g, b));
 
-  leftStrip.show();
-  rightStrip.show();
-
   previousLed = index;
+  needsShow = true;
+}
+
+
+// Run one complete command line.
+void handleCommand(const char *command) {
+
+  // Example:
+  // CONFIG 361
+  //
+  // Python sends this once when LightTrack connects.
+  int n;
+
+  if (sscanf(command, "CONFIG %d", &n) == 1) {
+    configureTrack(n);
+    return;
+  }
+
+
+  // Example:
+  // SET 180 255 0 0
+  //
+  // This means:
+  // LED 180, red=255, green=0, blue=0.
+  int index, r, g, b;
+
+  if (sscanf(command, "SET %d %d %d %d", &index, &r, &g, &b) == 4) {
+    showLed(index, r, g, b);
+    return;
+  }
+
+
+  // Turn the track off.
+  if (strcmp(command, "CLEAR") == 0) {
+    clearTrack();
+  }
 }
 
 
@@ -101,7 +147,6 @@ void setup() {
 
   // Must match the baud rate used in lighttrack.py.
   Serial.begin(115200);
-  Serial.setTimeout(20);
 
   leftStrip.begin();
   rightStrip.begin();
@@ -112,51 +157,38 @@ void setup() {
 
 void loop() {
 
-  // Do nothing until Python sends a command.
-  if (!Serial.available()) {
-    return;
-  }
-
+  // Read every character that has arrived so far, without waiting.
   // Each command is one line of text.
-  String command = Serial.readStringUntil('\n');
-  command.trim();
+  while (Serial.available()) {
 
+    char c = Serial.read();
 
-  // Example:
-  // CONFIG 361
-  //
-  // Python sends this once when LightTrack connects.
-  if (command.startsWith("CONFIG ")) {
+    if (c == '\n') {
+      command[commandLength] = '\0';
 
-    int n;
+      // Ignore lines that did not fit, they are not valid commands.
+      if (!commandTooLong) {
+        handleCommand(command);
+      }
 
-    if (sscanf(command.c_str(), "CONFIG %d", &n) == 1) {
-      configureTrack(n);
+      commandLength = 0;
+      commandTooLong = false;
+    }
+    else if (c == '\r') {
+      // Ignore Windows line endings.
+    }
+    else if (commandLength < MAX_COMMAND_LENGTH) {
+      command[commandLength++] = c;
+    }
+    else {
+      commandTooLong = true;
     }
   }
 
-
-  // Example:
-  // SET 180 255 0 0
-  //
-  // This means:
-  // LED 180, red=255, green=0, blue=0.
-  else if (command.startsWith("SET ")) {
-
-    int index, r, g, b;
-
-    if (sscanf(
-      command.c_str(),
-      "SET %d %d %d %d",
-      &index, &r, &g, &b
-    ) == 4) {
-      showLed(index, r, g, b);
-    }
-  }
-
-
-  // Turn the track off.
-  else if (command == "CLEAR") {
-    clearTrack();
+  // Send the result of all commands read above to the strips in one go.
+  if (needsShow) {
+    leftStrip.show();
+    rightStrip.show();
+    needsShow = false;
   }
 }

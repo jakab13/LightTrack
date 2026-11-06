@@ -1,0 +1,14 @@
+# Arduino CLI sketch project file.
+# Pins the board core and library versions so every machine builds the same firmware.
+# https://arduino.github.io/arduino-cli/latest/sketch-project-file/
+
+profiles:
+  nanor4:
+    fqbn: arduino:renesas_uno:nanor4
+    platforms:
+      - platform: arduino:renesas_uno (1.6.0)
+    libraries:
+      - Adafruit NeoPixel (1.15.5)
+
+default_profile: nanor4
+default_fqbn: arduino:renesas_uno:nanor4
