@@ -8,3 +8,6 @@ __pycache__/
 fp-info-cache
 *.lck
 .history/
+
+# Blender backups
+*.blend1
