@@ -6,7 +6,7 @@ Checks that the LightTrack connection, the controller and the LEDs work.
 
 What it does:
 
-    1. Connects to LightTrack (1 m to 19 m, 30 LEDs/m).
+    1. Connects to LightTrack (1 m to 20 m, 30 LEDs/m).
     2. Uses the first controller pygame finds.
        If there is none, it opens a small window and uses the keyboard:
        Up/Down arrows act like the joystick, Space acts like A.
@@ -24,7 +24,7 @@ import pygame
 from lighttrack import LightTrack
 
 TRACK_START_M = 1   # first LED, in metres from the participant
-TRACK_END_M = 19    # last LED, in metres from the participant
+TRACK_END_M = 20    # last LED, in metres from the participant
 SPEED_M_PER_S = 2.0 # marker speed with the joystick pushed all the way
 DPAD_STEP_M = 0.1   # how far one D-pad press moves the marker
 CHECKS_PER_S = 50   # how often the input is read
