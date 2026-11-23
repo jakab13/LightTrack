@@ -1,0 +1,17 @@
+
+cff-version: 1.2.0
+message: "If you use LightTrack in your research, please cite this software."
+type: software
+
+title: "LightTrack: An Arduino-controlled LED response interface"
+
+authors:
+  - family-names: "Pilaszanovich"
+    given-names: "Jakab"
+  - family-names: "Seiter"
+    given-names: "Marius"
+  - family-names: "Schönwiesner"
+    given-names: "Marc"
+
+repository-code: "https://github.com/jakab13/LightTrack"
+license: "MIT"
