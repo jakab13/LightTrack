@@ -1,0 +1,13 @@
+build/
+.DS_Store
+__pycache__/
+
+# KiCad local state and backups
+*.kicad_prl
+*-backups/
+fp-info-cache
+*.lck
+.history/
+
+# Blender backups
+*.blend1
